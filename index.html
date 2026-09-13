@@ -1,0 +1,564 @@
+<title>Pulsar — 働くあなたに星の光を</title>
+<style>
+  /* ─────────────────────────────────────────────
+     Pulsar — Product LP
+     Visual: WebGL raymarched neutron star
+     Type:   欧文優先スタック ＋ palt ＋ 文節改行
+     ───────────────────────────────────────────── */
+  :root {
+    --void:    #04060E;
+    --panel:   rgba(146, 173, 224, 0.045);
+    --panel-2: rgba(146, 173, 224, 0.08);
+    --edge:    rgba(150, 178, 232, 0.14);
+    --edge-2:  rgba(150, 178, 232, 0.30);
+    --ink:     #E9EDF8;
+    --muted:   #96A3C0;
+    --faint:   #626F8C;
+    --sol:     #F2C87A;
+    --sol-dim: rgba(242, 200, 122, 0.12);
+    --luna:    #86ADEC;
+    --cyan:    #5FD6E6;
+    --up:      #4FD08E;
+    --down:    #F0707A;
+
+    /* ── 書体 ────────────────────────────────
+       ★欧文フェイスを先に置く。和文フォントを先頭にすると
+         ラテン文字までそこから出てしまい、字面が緩んで弱く見える。   */
+    --f-disp: Didot, "Bodoni 72", "Playfair Display", "Palatino Linotype", Palatino,
+              Georgia, "Hiragino Mincho ProN", "Yu Mincho", YuMincho, "Noto Serif JP", serif;
+    --f-body: "Avenir Next", Avenir, "Segoe UI Variable Text", "Segoe UI",
+              "Hiragino Kaku Gothic ProN", "Yu Gothic", YuGothic, "Noto Sans JP", sans-serif;
+    --f-mono: "SF Mono", SFMono-Regular, "JetBrains Mono", "Cascadia Mono",
+              ui-monospace, Menlo, Consolas, monospace;
+
+    --maxw: 1080px;
+    --pad: clamp(1.15rem, 4.5vw, 3rem);
+  }
+
+  * { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--void);
+    color: var(--ink);
+    font-family: var(--f-body);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.85;
+    /* ★palt = 和文プロポーショナル詰め。これが無いと約物の前後が空いて締まらない */
+    font-feature-settings: "palt" 1, "kern" 1;
+    font-optical-sizing: auto;
+    letter-spacing: .012em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* 和文の行分割: 文節で折る（対応ブラウザのみ）／禁則を厳格に */
+  h1, h2, h3, h4, .standfirst, .sub, .hero-lede, .concept, figcaption, li, p {
+    word-break: auto-phrase;
+    line-break: strict;
+    overflow-wrap: anywhere;
+  }
+
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding-left: var(--pad); padding-right: var(--pad); }
+  h1, h2, h3, h4 { margin: 0; text-wrap: balance; }
+  p { margin: 0; text-wrap: pretty; }
+
+  /* ── HERO ─────────────────────────────── */
+  .hero { position: relative; min-height: min(92vh, 800px); display: flex; align-items: center; overflow: hidden; }
+  #sky { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .hero::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to bottom, transparent 56%, var(--void) 99%); }
+  .hero .wrap { position: relative; z-index: 2; width: 100%; padding: 4rem 0; }
+
+  .os {
+    font-family: var(--f-mono); font-size: .66rem; font-weight: 500;
+    letter-spacing: .34em; text-transform: uppercase; color: var(--cyan);
+  }
+  .brand {
+    font-family: var(--f-disp);
+    font-weight: 400; font-style: normal;
+    letter-spacing: .26em; text-transform: uppercase;
+    font-size: clamp(2.9rem, 9.5vw, 5.8rem); line-height: .98;
+    margin: .75rem 0 .2rem; padding-right: .26em;
+    background: linear-gradient(178deg, #FFFFFF 8%, #D7E4FA 42%, #97B6E8 88%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    filter: drop-shadow(0 0 34px rgba(134,173,236,.42));
+  }
+  .concept {
+    font-family: var(--f-disp); font-weight: 500;
+    font-size: clamp(1.22rem, 3.4vw, 1.85rem); color: var(--sol);
+    letter-spacing: .06em; line-height: 1.5; margin-top: .5rem;
+  }
+  .hero-lede {
+    margin-top: 1.6rem; color: var(--muted);
+    font-size: clamp(.98rem, 2vw, 1.1rem); max-width: 33ch; line-height: 2.05;
+    letter-spacing: .02em;
+  }
+
+  /* ── SECTION ──────────────────────────── */
+  section { padding: clamp(3.6rem, 8vw, 6.5rem) 0; }
+  .rule { height: 1px; background: linear-gradient(to right, var(--edge-2), transparent); }
+  .eyebrow {
+    font-family: var(--f-mono); font-size: .655rem; font-weight: 500;
+    letter-spacing: .26em; text-transform: uppercase; color: var(--sol); margin-bottom: 1rem;
+  }
+  h2 {
+    font-family: var(--f-disp); font-weight: 500;
+    font-size: clamp(1.55rem, 4.2vw, 2.4rem); line-height: 1.48; letter-spacing: .02em;
+  }
+  .sub { color: var(--muted); margin-top: 1.1rem; max-width: 47ch; line-height: 2; }
+  .sub strong { color: var(--ink); font-weight: 600; }
+
+  figure { margin: 2.4rem 0 0; }
+  figcaption { font-family: var(--f-mono); font-size: .655rem; letter-spacing: .1em; color: var(--faint); margin-top: 1rem; }
+  .scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  svg { display: block; max-width: 100%; height: auto; }
+  .svg-min { min-width: 40rem; }
+
+  /* ── 課題 ─────────────────────────────── */
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2.2rem; }
+  @media (max-width: 700px) { .two { grid-template-columns: 1fr; } }
+  .wall { padding: 1.7rem 1.6rem; background: var(--panel); border: 1px solid var(--edge); border-radius: 5px; }
+  .wall .k { font-family: var(--f-mono); font-size: .62rem; font-weight: 500; letter-spacing: .22em; text-transform: uppercase; color: var(--cyan); }
+  .wall h3 { font-family: var(--f-disp); font-weight: 500; font-size: 1.32rem; letter-spacing: .03em; margin: .6rem 0 .45rem; }
+  .wall p { font-size: .89rem; color: var(--muted); line-height: 1.9; }
+
+  /* ── 4軸 ──────────────────────────────── */
+  .quad { display: grid; grid-template-columns: repeat(4, 1fr); gap: .7rem; margin-top: 2rem; }
+  @media (max-width: 880px) { .quad { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 470px) { .quad { grid-template-columns: 1fr; } }
+  .q { padding: 1.4rem 1.15rem; background: var(--panel); border: 1px solid var(--edge); border-radius: 5px; }
+  .q .qi { font-family: var(--f-disp); font-weight: 400; font-size: 2rem; color: var(--sol); line-height: 1; letter-spacing: .04em; }
+  .q .term { display: block; font-family: var(--f-mono); font-size: .59rem; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--cyan); margin: .7rem 0 .3rem; }
+  .q h4 { font-size: .95rem; font-weight: 600; letter-spacing: .02em; }
+
+  /* ── 3層 ──────────────────────────────── */
+  .layers { display: grid; gap: .6rem; margin-top: 2rem; }
+  .layer { display: grid; grid-template-columns: 2.7rem 1fr; gap: 0 1rem; align-items: baseline; padding: 1.15rem 1.35rem; background: var(--panel); border: 1px solid var(--edge); border-left: 2px solid var(--luna); border-radius: 5px; }
+  .layer.veto { border-left-color: var(--sol); }
+  .layer .ln { font-family: var(--f-mono); font-size: .74rem; font-weight: 600; letter-spacing: .08em; color: var(--luna); }
+  .layer.veto .ln { color: var(--sol); }
+  .layer h4 { font-size: .98rem; font-weight: 600; letter-spacing: .02em; margin-bottom: .12rem; }
+  .layer p { font-size: .87rem; color: var(--muted); line-height: 1.85; }
+  @media (max-width: 540px) { .layer { grid-template-columns: 1fr; gap: .3rem; } }
+
+  /* ── 手順 ─────────────────────────────── */
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: .7rem; margin-top: 2rem; }
+  @media (max-width: 880px) { .steps { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 470px) { .steps { grid-template-columns: 1fr; } }
+  .step { padding: 1.4rem 1.15rem; background: var(--panel); border: 1px solid var(--edge); border-radius: 5px; }
+  .step .sn { font-family: var(--f-mono); font-size: .64rem; font-weight: 600; letter-spacing: .18em; color: var(--sol); }
+  .step h4 { font-size: .96rem; font-weight: 600; letter-spacing: .02em; margin: .6rem 0 .35rem; }
+  .step p { font-size: .84rem; color: var(--muted); line-height: 1.85; }
+
+  /* ── 料金 ─────────────────────────────── */
+  .tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; margin-top: 2rem; align-items: start; }
+  @media (max-width: 880px) { .tiers { grid-template-columns: 1fr; } }
+  .tier { padding: 1.7rem 1.5rem; background: var(--panel); border: 1px solid var(--edge); border-radius: 5px; }
+  .tier.free { border-color: rgba(242,200,122,.5); background: var(--sol-dim); }
+  .tier .tname { font-family: var(--f-mono); font-size: .63rem; font-weight: 600; letter-spacing: .24em; text-transform: uppercase; color: var(--cyan); }
+  .tier.free .tname { color: var(--sol); }
+  .tier .tprice { font-family: var(--f-disp); font-weight: 400; font-size: 2rem; letter-spacing: .01em; margin: .4rem 0 .9rem; font-variant-numeric: lining-nums tabular-nums; }
+  .tier .tprice.soon { font-size: 1.12rem; letter-spacing: .16em; color: var(--faint); }
+  .tier .tprice small { font-family: var(--f-body); font-size: .72rem; font-weight: 400; color: var(--faint); letter-spacing: .04em; }
+  .tier ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .45rem; }
+  .tier li { font-size: .86rem; line-height: 1.75; padding-left: 1.05rem; position: relative; color: var(--muted); }
+  .tier li::before { content: "·"; position: absolute; left: .25rem; color: var(--cyan); }
+  .tier.free li { color: var(--ink); }
+  .tier.free li::before { color: var(--sol); }
+
+  .note { margin-top: 2.2rem; padding: 1.6rem 1.7rem; background: var(--panel-2); border: 1px solid var(--edge); border-radius: 5px; font-size: .93rem; line-height: 1.95; }
+  .note b { color: var(--sol); font-weight: 600; }
+  .note strong { color: var(--ink); font-weight: 600; }
+
+  .cta { display: inline-block; margin-top: 2rem; font-family: var(--f-mono); font-size: .78rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--cyan); text-decoration: none; border-bottom: 1px solid var(--cyan); padding-bottom: .2rem; }
+  .cta:hover, .cta:focus-visible { color: var(--sol); border-color: var(--sol); }
+  a:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+
+  footer { padding: 2.8rem 0 5rem; border-top: 1px solid var(--edge); }
+  .disclaimer { font-size: .75rem; color: var(--faint); line-height: 2; max-width: 58ch; }
+  .mark { font-family: var(--f-disp); font-weight: 400; letter-spacing: .32em; text-transform: uppercase; font-size: .88rem; color: var(--muted); margin-top: 1.6rem; }
+
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+</style>
+
+<!-- ══════════ HERO ══════════ -->
+<div class="hero">
+  <canvas id="sky" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <p class="os">Market Observation OS</p>
+    <h1 class="brand">Pulsar</h1>
+    <p class="concept">働くあなたに星の光を</p>
+    <p class="hero-lede">チャートを見張る係は、機械にした。<br>夜のうちに対象銘柄を走査して、翌朝、動いた銘柄とその理由だけが並ぶ。</p>
+    <a class="cta" href="https://pulsar-trade.vercel.app">今日のシグナルを無料で見る →</a>
+  </div>
+</div>
+
+<!-- ══════════ 課題 ══════════ -->
+<div class="wrap"><section>
+  <p class="eyebrow">何を解いているか</p>
+  <h2>働きながら投資をするには、壁が二つある。</h2>
+  <div class="two">
+    <div class="wall"><span class="k">Wall 01</span><h3>時間がない</h3><p>日中は本業。板を見ていられない。</p></div>
+    <div class="wall"><span class="k">Wall 02</span><h3>読み方が分からない</h3><p>チャートの形に意味があると言われても、何が「今」なのか判断できない。</p></div>
+  </div>
+  <p class="sub">Pulsar は両方を一つの方法で外す ── <strong>チャートを読む行為を、機械が実行できる規則に置き換える。</strong></p>
+</section></div>
+
+<!-- ══════════ 核心 ══════════ -->
+<div class="wrap"><div class="rule"></div><section>
+  <p class="eyebrow">仕組みの核心</p>
+  <h2>チャート → シグナル</h2>
+  <p class="sub">テクニカルのノウハウを数式にした規則で、毎晩すべてを同じように見る。<strong>同じ入力なら、いつも同じ答えを返す。</strong>その日の気分も、話題性も、判定には入らない。</p>
+  <figure>
+    <div class="scroll">
+      <svg class="svg-min" viewBox="0 0 1000 300" role="img" aria-label="ローソク足チャートがルール判定を通ってシグナルカードになる図">
+        <defs><linearGradient id="gl" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#5FD6E6" stop-opacity="0"/><stop offset="1" stop-color="#5FD6E6" stop-opacity=".9"/>
+        </linearGradient></defs>
+        <text x="28" y="28" font-family="ui-monospace,Menlo,monospace" font-size="12" fill="#5FD6E6" letter-spacing="2">PUBLIC DATA</text>
+        <g stroke-width="2">
+          <g stroke="#F0707A" fill="#F0707A">
+            <line x1="44" y1="74" x2="44" y2="144"/><rect x="38" y="86" width="12" height="46"/>
+            <line x1="71" y1="90" x2="71" y2="162"/><rect x="65" y="104" width="12" height="44"/>
+            <line x1="98" y1="106" x2="98" y2="180"/><rect x="92" y="120" width="12" height="46"/>
+            <line x1="125" y1="124" x2="125" y2="199"/><rect x="119" y="140" width="12" height="44"/>
+            <line x1="152" y1="144" x2="152" y2="216"/><rect x="146" y="160" width="12" height="42"/>
+          </g>
+          <g stroke="#4FD08E" fill="none">
+            <line x1="179" y1="152" x2="179" y2="218"/><rect x="173" y="168" width="12" height="38"/>
+            <line x1="206" y1="134" x2="206" y2="206"/><rect x="200" y="146" width="12" height="44"/>
+            <line x1="233" y1="112" x2="233" y2="190"/><rect x="227" y="124" width="12" height="48"/>
+            <line x1="260" y1="94" x2="260" y2="168"/><rect x="254" y="106" width="12" height="48"/>
+          </g>
+        </g>
+        <path d="M44,114 C110,144 150,184 189,186 C239,190 264,144 289,122" fill="none" stroke="#86ADEC" stroke-width="1.5" stroke-dasharray="4 4" opacity=".8"/>
+        <text x="44" y="252" font-family="system-ui,sans-serif" font-size="13" fill="#626F8C">価格・出来高・財務</text>
+        <line x1="306" y1="145" x2="372" y2="145" stroke="url(#gl)" stroke-width="2"/>
+        <path d="M366,140 L374,145 L366,150" fill="none" stroke="#5FD6E6" stroke-width="1.6"/>
+        <rect x="384" y="56" width="232" height="178" rx="5" fill="rgba(242,200,122,.09)" stroke="#F2C87A" stroke-width="1.6"/>
+        <text x="500" y="88" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="12" fill="#F2C87A" letter-spacing="3">RULES</text>
+        <text x="500" y="124" text-anchor="middle" font-family="system-ui,sans-serif" font-size="15" fill="#E9EDF8">テクニカルのノウハウを</text>
+        <text x="500" y="148" text-anchor="middle" font-family="system-ui,sans-serif" font-size="15" fill="#E9EDF8">数式にした規則</text>
+        <line x1="414" y1="170" x2="586" y2="170" stroke="#F2C87A" stroke-width="1" opacity=".35"/>
+        <text x="500" y="198" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" fill="#96A3C0">同じ入力なら、いつも同じ答え</text>
+        <text x="500" y="252" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" fill="#626F8C">ここが Pulsar の資産</text>
+        <line x1="628" y1="145" x2="694" y2="145" stroke="url(#gl)" stroke-width="2"/>
+        <path d="M688,140 L696,145 L688,150" fill="none" stroke="#5FD6E6" stroke-width="1.6"/>
+        <rect x="706" y="56" width="266" height="178" rx="5" fill="rgba(146,173,224,.07)" stroke="rgba(150,178,232,.3)" stroke-width="1.4"/>
+        <rect x="706" y="56" width="266" height="3" fill="#4FD08E"/>
+        <text x="728" y="94" font-family="ui-monospace,Menlo,monospace" font-size="12" fill="#626F8C">7203</text>
+        <text x="728" y="120" font-family="system-ui,sans-serif" font-size="17" fill="#E9EDF8">〇〇〇〇株式会社</text>
+        <rect x="728" y="136" width="52" height="25" rx="3" fill="none" stroke="#4FD08E" stroke-width="1.5"/>
+        <text x="754" y="153" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="13" fill="#4FD08E" letter-spacing="1">BUY</text>
+        <text x="794" y="153" font-family="system-ui,sans-serif" font-size="13" fill="#96A3C0">軸Ⅰ・押し目</text>
+        <text x="728" y="184" font-family="system-ui,sans-serif" font-size="13" fill="#96A3C0">SMA25 まで戻り、出来高が回復</text>
+        <text x="728" y="206" font-family="system-ui,sans-serif" font-size="13" fill="#96A3C0">下降が止まった形</text>
+        <text x="706" y="252" font-family="system-ui,sans-serif" font-size="13" fill="#626F8C">向きと理由は無料</text>
+      </svg>
+    </div>
+    <figcaption>スコアと目安価格は有料側／向きと理由は無料側。</figcaption>
+  </figure>
+</section></div>
+
+<!-- ══════════ 4軸 ══════════ -->
+<div class="wrap"><div class="rule"></div><section>
+  <p class="eyebrow">4軸 ─ 銘柄をどう選ぶか</p>
+  <h2>「上がりそう」を、4つの理由に分ける。</h2>
+  <p class="sub">理由が違えば、持つ期間も出口も違う。どの軸で発火したかを添えて出す。</p>
+  <div class="quad">
+    <div class="q"><span class="qi">Ⅰ</span><span class="term">長期</span><h4>価値再評価型</h4></div>
+    <div class="q"><span class="qi">Ⅱ</span><span class="term">中期</span><h4>将来性期待型</h4></div>
+    <div class="q"><span class="qi">Ⅲ</span><span class="term">短期</span><h4>マネーゲーム型</h4></div>
+    <div class="q"><span class="qi">Ⅳ</span><span class="term">中長期</span><h4>業績評価型</h4></div>
+  </div>
+</section></div>
+
+<!-- ══════════ 3層 ══════════ -->
+<div class="wrap"><div class="rule"></div><section>
+  <p class="eyebrow">3層 ─ どう判断するか</p>
+  <h2>最後に置いてあるのは、守り。</h2>
+  <div class="layers">
+    <div class="layer"><span class="ln">L1</span><div><h4>決定論コア</h4><p>テクニカルのノウハウをルール化。ブレない判断の土台。</p></div></div>
+    <div class="layer"><span class="ln">L2</span><div><h4>MiroFish 補正</h4><p>10エージェントの討論で、数字に出ない需給と物語を補正。</p></div></div>
+    <div class="layer veto"><span class="ln">L3</span><div><h4>LLM veto（拒否権）</h4><p>最終段で「買わない理由」を生成し、衝動に拒否権を行使。</p></div></div>
+  </div>
+  <p class="sub">積み上げる層のあとに、<strong>止める層</strong>を置いている。効くのは買える理由を増やすことより、買わない理由を見落とさないこと。</p>
+</section></div>
+
+<!-- ══════════ 使い方 ══════════ -->
+<div class="wrap"><div class="rule"></div><section>
+  <p class="eyebrow">使い方</p>
+  <h2>朝の5分で終わる。</h2>
+  <figure>
+    <div class="scroll">
+      <svg class="svg-min" viewBox="0 0 1000 150" role="img" aria-label="1日の流れ。深夜に走査、朝にシグナル確認、買ったを記録、8営業日ほど追って手仕舞い">
+        <line x1="70" y1="62" x2="930" y2="62" stroke="rgba(150,178,232,.2)" stroke-width="2"/>
+        <line x1="70" y1="62" x2="320" y2="62" stroke="#86ADEC" stroke-width="3"/>
+        <line x1="320" y1="62" x2="820" y2="62" stroke="#F2C87A" stroke-width="3"/>
+        <g font-family="system-ui,sans-serif" font-size="14" fill="#E9EDF8" text-anchor="middle">
+          <circle cx="70" cy="62" r="7" fill="#86ADEC"/><text x="70" y="96">走査</text>
+          <circle cx="320" cy="62" r="7" fill="#F2C87A"/><text x="320" y="96">シグナルを見る</text>
+          <circle cx="570" cy="62" r="7" fill="#F2C87A"/><text x="570" y="96">「買った」を押す</text>
+          <circle cx="820" cy="62" r="7" fill="#86ADEC"/><text x="820" y="96">追う → done!</text>
+        </g>
+        <g font-family="ui-monospace,Menlo,monospace" font-size="11" fill="#626F8C" text-anchor="middle">
+          <text x="70" y="38">深夜・機械</text><text x="320" y="38">朝・あなた</text>
+          <text x="570" y="38">判断・あなた</text><text x="820" y="38">8営業日ほど</text>
+        </g>
+        <g font-family="system-ui,sans-serif" font-size="11.5" fill="#626F8C" text-anchor="middle">
+          <text x="70" y="120">対象銘柄を見る</text><text x="320" y="120">発火だけ並ぶ</text>
+          <text x="570" y="120">建値が固定される</text><text x="820" y="120">記録に残る</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption>青＝機械の担当／金＝人の担当。買うかどうかを決めるのは、いつも人。</figcaption>
+  </figure>
+  <div class="steps">
+    <div class="step"><span class="sn">01</span><h4>一覧を開く</h4><p>発火した銘柄が並ぶ。向きと理由つき。登録も課金も不要。</p></div>
+    <div class="step"><span class="sn">02</span><h4>銘柄を開く</h4><p>チャートと成立した規則。PRO ではスコア内訳と目安価格。</p></div>
+    <div class="step"><span class="sn">03</span><h4>自分の口座で買う</h4><p>「買った」を押すと建値が固定され、以後ずれない。</p></div>
+    <div class="step"><span class="sn">04</span><h4>手仕舞いまで追う</h4><p>done! で記録になり、次の判断材料として積み上がる。</p></div>
+  </div>
+</section></div>
+
+<!-- ══════════ 料金 ══════════ -->
+<div class="wrap"><div class="rule"></div><section>
+  <p class="eyebrow">料金</p>
+  <h2>シグナルは、対象銘柄ぶん無料。</h2>
+  <p class="sub">課金するのはシグナルそのものではなく、それを扱う道具と、執行の自動化。<br><strong>Pro は初回2週間無料。</strong>無料期間が終わっても、自動で課金されることはない。</p>
+  <div class="tiers">
+    <div class="tier free"><span class="tname">Free</span><p class="tprice">¥0</p>
+      <ul><li>BUY / HOLD / SELL の向き</li><li>そう出た理由</li><li>発火した軸</li><li>チャート</li></ul></div>
+    <div class="tier"><span class="tname">Pro</span><p class="tprice">¥980 <small>／月（税込）</small></p>
+      <ul><li>スコアと内訳</li><li>エントリー／損切り／利確の目安</li><li>チャート・パターン分析</li><li>My Stock・ポートフォリオ管理</li></ul></div>
+    <div class="tier"><span class="tname">Auto</span><p class="tprice soon">COMING SOON</p>
+      <ul><li>設定した条件に従う機械的な執行</li><li>Pro の内容をすべて含む</li><li>実発注には kabuステーションAPI の設定が必要</li><li>現在は準備中です</li></ul></div>
+  </div>
+  <div class="note">
+    <b>なぜシグナルを無料にしているか。</b>
+    個別銘柄の売買判断を有料の壁の内側に置くと、日本では投資助言業の登録が要る。
+    そこで<strong>判断は誰でも読める場所に置き、課金は道具と自動化に限る</strong>建て付けにした。
+    制約への妥協ではない ── 「一人の投資家を助ける」という目的と方向が一致している。
+    助けたい相手を、壁の外に置いたままにできる。
+  </div>
+</section></div>
+
+<!-- ══════════ 現在地 ══════════ -->
+<div class="wrap"><div class="rule"></div><section>
+  <p class="eyebrow">2026-09-13 時点</p>
+  <h2>β 完成。次は、人に渡す。</h2>
+  <p class="sub">
+    夜間走査・シグナル公開・課金動線・利用ログの計測まで動いている。
+    次はどこで離脱するかを見ること。そのあと Pulsar Japan ── 同じ仕組みを英語にして、
+    海外の人が日本企業を理解できるようにする段へ。
+  </p>
+  <a class="cta" href="https://pulsar-trade.vercel.app">今日のシグナルを無料で見る →</a>
+</section></div>
+
+<div class="wrap"><footer>
+  <p class="disclaimer">
+    本サービスは情報提供を目的とし、投資勧誘・投資助言を目的とするものではありません。
+    表示されるシグナル・スコアは公開情報に基づく機械的な分析結果であり、利益を保証するものではありません。
+    投資判断はご自身の責任で行ってください。このページは製品の説明であり、申込画面ではありません。
+  </p>
+  <p class="mark">PULSAR</p>
+</footer></div>
+
+<script>
+(function () {
+  var cv = document.getElementById('sky');
+  if (!cv) return;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var gl = null;
+  try {
+    gl = cv.getContext('webgl', { antialias: false, alpha: false, powerPreference: 'low-power' })
+      || cv.getContext('experimental-webgl');
+  } catch (e) { gl = null; }
+
+  /* ── WebGL: 中性子星をレイマーチで描く ───────────────────
+     ・ビームは円錐の内部を視線方向に積分するボリュームレンダリング
+     ・降着円盤は y=0 平面との交点を取り、半径で帯状に発光
+     ・星野は方向ベクトルのハッシュから生成（視差なしの遠景）           */
+  var VS = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+
+  var FS = [
+    'precision highp float;',
+    'uniform vec2  R;',
+    'uniform float T;',
+
+    'float h21(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}',
+    'float h31(vec3 p){return fract(sin(dot(p,vec3(127.1,311.7,74.7)))*43758.5453);}',
+
+    // 遠景の星（方向ベクトルをセル分割してセルごとに1つ星を置く）
+    'vec3 stars(vec3 rd){',
+    '  vec3 col=vec3(0.);',
+    '  for(int k=0;k<3;k++){',
+    '    float sc=float(k)*46.+38.;',
+    '    vec3 q=rd*sc;',
+    '    vec3 id=floor(q);',
+    '    vec3 f=fract(q)-.5;',
+    '    float r=h31(id);',
+    '    if(r>.955){',
+    '      vec3 off=vec3(h31(id+1.7),h31(id+3.1),h31(id+5.3))-.5;',
+    '      float d=length(f-off*.6);',
+    '      float b=smoothstep(.085,.0,d)*(r-.955)*22.;',
+    '      float tw=.72+.28*sin(T*1.6+r*63.);',
+    '      vec3 tint=mix(vec3(.82,.89,1.),vec3(1.,.93,.82),h31(id+9.1));',
+    '      col+=tint*b*tw;',
+    '    }',
+    '  }',
+    '  return col;',
+    '}',
+
+    // 3D 回転
+    'mat3 rotX(float a){float c=cos(a),s=sin(a);return mat3(1.,0.,0., 0.,c,-s, 0.,s,c);}',
+    'mat3 rotY(float a){float c=cos(a),s=sin(a);return mat3(c,0.,s, 0.,1.,0., -s,0.,c);}',
+    'mat3 rotZ(float a){float c=cos(a),s=sin(a);return mat3(c,-s,0., s,c,0., 0.,0.,1.);}',
+
+    'void main(){',
+    '  vec2 uv=(gl_FragCoord.xy-.5*R)/R.y;',
+    // 中性子星をやや右上へ
+    '  vec3 ro=vec3(0.,0.,-3.2);',
+    '  vec3 rd=normalize(vec3(uv-vec2(.30,.11),1.35));',
+
+    '  vec3 col=stars(rd)*1.15;',
+
+    // 星雲（背景の淡い雲・方向ベクトルのノイズ）
+    '  float neb=0.;',
+    '  vec3 np=rd*2.2;',
+    '  for(int i=0;i<4;i++){',
+    '    float s=pow(2.,float(i));',
+    '    neb+=(h31(floor(np*s*3.))-.5)/s;',
+    '  }',
+    '  neb=max(0.,neb)*.5;',
+    '  col+=mix(vec3(.16,.24,.52),vec3(.34,.20,.50),h21(rd.xy*3.))*neb*.5;',
+
+    // ── 自転する双極ビーム ───────────────────────────
+    '  mat3 spin=rotY(T*.55)*rotZ(-.42);',   // 自転＋磁軸の傾き
+    '  vec3 axis=spin*vec3(0.,1.,0.);',
+    '  float beam=0.;',
+    '  float disk=0.;',
+    '  const int STEPS=54;',
+    '  for(int i=0;i<STEPS;i++){',
+    '    float t=.35+float(i)*.105;',
+    '    vec3 pos=ro+rd*t;',
+    '    float r=length(pos);',
+    '    if(r>7.)continue;',
+    // ビーム: 磁軸との角度が小さいほど強い
+    '    float ca=abs(dot(normalize(pos),axis));',
+    '    float cone=pow(smoothstep(.965,1.,ca),2.2);',
+    '    float fall=1./(1.+r*r*.55);',
+    '    beam+=cone*fall*.10;',
+    // 降着円盤: 磁軸に垂直な面の近傍
+    '    float pl=dot(pos,axis);',
+    '    float rad=sqrt(max(0.,r*r-pl*pl));',
+    '    float band=smoothstep(.62,.66,rad)*(1.-smoothstep(1.28,1.62,rad));',
+    '    float thin=exp(-abs(pl)*26.);',
+    '    disk+=band*thin*.055;',
+    '  }',
+    '  col+=vec3(.62,.78,1.05)*beam*1.35;',
+    '  col+=vec3(1.0,.80,.44)*disk*1.5;',
+
+    // ── コア（表面と大気）──────────────────────────
+    '  float b=dot(rd,-ro);',
+    '  float c2=dot(ro,ro)-.0125;',
+    '  float disc=b*b-c2;',
+    '  float glow=1./(1.+pow(length(cross(rd,-normalize(ro)))*length(ro)*7.4,2.4));',
+    '  float pul=.90+.10*sin(T*1.1);',
+    '  col+=vec3(.72,.85,1.15)*glow*1.55*pul;',
+    '  if(disc>0.){',
+    '    col+=vec3(1.,1.,1.)*1.4;',
+    '  }',
+
+    // トーンマップと僅かなグレイン（バンディング防止）
+    '  col=col/(col+vec3(.80));',
+    '  col=pow(col,vec3(.92));',
+    '  col+=(h21(gl_FragCoord.xy+T)-.5)*.012;',
+    '  col=max(col,vec3(.0157,.0235,.0549));',
+    '  gl_FragColor=vec4(col,1.);',
+    '}'
+  ].join('\n');
+
+  function compile(type, src) {
+    var s = gl.createShader(type);
+    gl.shaderSource(s, src); gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) { gl = null; return null; }
+    return s;
+  }
+
+  var prog = null, uR = null, uT = null, DPR = Math.min(window.devicePixelRatio || 1, 1.75);
+
+  function initGL() {
+    var vs = compile(gl.VERTEX_SHADER, VS); if (!vs) return false;
+    var fs = compile(gl.FRAGMENT_SHADER, FS); if (!fs) return false;
+    prog = gl.createProgram();
+    gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return false;
+    gl.useProgram(prog);
+    var buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+    var loc = gl.getAttribLocation(prog, 'p');
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    uR = gl.getUniformLocation(prog, 'R');
+    uT = gl.getUniformLocation(prog, 'T');
+    return true;
+  }
+
+  function sizeGL() {
+    var r = cv.getBoundingClientRect();
+    cv.width = Math.max(320, Math.round(r.width * DPR));
+    cv.height = Math.max(320, Math.round(r.height * DPR));
+    gl.viewport(0, 0, cv.width, cv.height);
+    gl.uniform2f(uR, cv.width, cv.height);
+  }
+
+  /* ── 2D フォールバック（WebGL 不可の環境）── */
+  function fallback2D() {
+    var ctx = cv.getContext('2d'); if (!ctx) return;
+    var W, H, D = Math.min(window.devicePixelRatio || 1, 2), st = [];
+    function seed(s){return function(){s=(s*1664525+1013904223)%4294967296;return s/4294967296;};}
+    function size() {
+      var r = cv.getBoundingClientRect();
+      W = Math.max(320, r.width); H = Math.max(320, r.height);
+      cv.width = W*D; cv.height = H*D; ctx.setTransform(D,0,0,D,0,0);
+      var rr = seed(811); st = [];
+      for (var i=0;i<Math.round(W*H/5200);i++){var d=rr();st.push({x:rr()*W,y:rr()*H,r:.25+d*d*1.5,a:.18+d*.75});}
+    }
+    function draw() {
+      ctx.fillStyle='#04060E'; ctx.fillRect(0,0,W,H);
+      ctx.globalCompositeOperation='lighter';
+      for (var i=0;i<st.length;i++){var s=st[i];ctx.fillStyle='rgba(214,230,255,'+s.a.toFixed(3)+')';ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,6.2832);ctx.fill();}
+      var px=W*.78, py=H*.36;
+      var g=ctx.createRadialGradient(px,py,0,px,py,Math.min(W,H)*.5);
+      g.addColorStop(0,'rgba(255,255,255,.95)');g.addColorStop(.05,'rgba(200,228,255,.6)');
+      g.addColorStop(.3,'rgba(120,170,240,.18)');g.addColorStop(1,'rgba(80,130,220,0)');
+      ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+      ctx.globalCompositeOperation='source-over';
+    }
+    size(); draw();
+    window.addEventListener('resize', function(){ size(); draw(); });
+  }
+
+  if (!gl || !initGL()) { fallback2D(); return; }
+
+  sizeGL();
+  var t0 = performance.now();
+  function frame(now) {
+    gl.uniform1f(uT, (now - t0) / 1000);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    if (!reduce) requestAnimationFrame(frame);
+  }
+  if (reduce) { gl.uniform1f(uT, 3.4); gl.drawArrays(gl.TRIANGLES, 0, 3); }
+  else requestAnimationFrame(frame);
+
+  if (window.ResizeObserver) new ResizeObserver(function () {
+    sizeGL(); if (reduce) { gl.uniform1f(uT, 3.4); gl.drawArrays(gl.TRIANGLES, 0, 3); }
+  }).observe(cv);
+})();
+</script>
