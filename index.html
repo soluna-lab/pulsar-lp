@@ -150,12 +150,10 @@
   .q .term { display: block; font-family: var(--f-mono); font-size: .59rem; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--cyan); margin: .7rem 0 .3rem; }
   .q h4 { font-size: .95rem; font-weight: 600; letter-spacing: .02em; }
 
-  /* ── 3層 ──────────────────────────────── */
+  /* ── 2層 ──────────────────────────────── */
   .layers { display: grid; gap: .6rem; margin-top: 2rem; }
   .layer { display: grid; grid-template-columns: 2.7rem 1fr; gap: 0 1rem; align-items: baseline; padding: 1.15rem 1.35rem; background: var(--panel); border: 1px solid var(--edge); border-left: 2px solid var(--luna); border-radius: 5px; }
-  .layer.veto { border-left-color: var(--sol); }
   .layer .ln { font-family: var(--f-mono); font-size: .74rem; font-weight: 600; letter-spacing: .08em; color: var(--luna); }
-  .layer.veto .ln { color: var(--sol); }
   .layer h4 { font-size: .98rem; font-weight: 600; letter-spacing: .02em; margin-bottom: .12rem; }
   .layer p { font-size: .87rem; color: var(--muted); line-height: 1.85; }
   @media (max-width: 540px) { .layer { grid-template-columns: 1fr; gap: .3rem; } }
@@ -170,14 +168,13 @@
   .step p { font-size: .84rem; color: var(--muted); line-height: 1.85; }
 
   /* ── 料金 ─────────────────────────────── */
-  .tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; margin-top: 2rem; align-items: start; }
+  .tiers { display: grid; grid-template-columns: repeat(2, 1fr); gap: .8rem; margin-top: 2rem; align-items: start; }
   @media (max-width: 880px) { .tiers { grid-template-columns: 1fr; } }
   .tier { padding: 1.7rem 1.5rem; background: var(--panel); border: 1px solid var(--edge); border-radius: 5px; }
   .tier.free { border-color: rgba(242,200,122,.5); background: var(--sol-dim); }
   .tier .tname { font-family: var(--f-mono); font-size: .63rem; font-weight: 600; letter-spacing: .24em; text-transform: uppercase; color: var(--cyan); }
   .tier.free .tname { color: var(--sol); }
   .tier .tprice { font-family: var(--f-disp); font-weight: 400; font-size: 2rem; letter-spacing: .01em; margin: .4rem 0 .9rem; font-variant-numeric: lining-nums tabular-nums; }
-  .tier .tprice.soon { font-size: 1.12rem; letter-spacing: .16em; color: var(--faint); }
   .tier .tprice small { font-family: var(--f-body); font-size: .72rem; font-weight: 400; color: var(--faint); letter-spacing: .04em; }
   .tier ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .45rem; }
   .tier li { font-size: .86rem; line-height: 1.75; padding-left: 1.05rem; position: relative; color: var(--muted); }
@@ -294,16 +291,15 @@
   </div>
 </section></div>
 
-<!-- ══════════ 3層 ══════════ -->
+<!-- ══════════ 2層 ══════════ -->
 <div class="wrap"><div class="rule"></div><section>
-  <p class="eyebrow">3層 ─ どう判断するか</p>
-  <h2>最後に置いてあるのは、守り。</h2>
+  <p class="eyebrow">2層 ─ どう判断するか</p>
+  <h2>ルールが土台、注目度で補正。</h2>
   <div class="layers">
     <div class="layer"><span class="ln">L1</span><div><h4>決定論コア</h4><p>テクニカルのノウハウをルール化。ブレない判断の土台。</p></div></div>
     <div class="layer"><span class="ln">L2</span><div><h4>MiroFish 補正</h4><p>いま注目されている銘柄を、上に寄せる。ニュースの見出しに何度も名前が出た銘柄、Google の急上昇ワードに入った銘柄、資金が集まっている業種の銘柄は、点数と並び順が上がる。PRO では、株価と出来高から測る「大衆心理」の強さで並びをさらに補正できる（任意でオン）。</p></div></div>
-    <div class="layer veto"><span class="ln">L3</span><div><h4>AUTO の安全装置</h4><p>COMING SOON</p></div></div>
   </div>
-  <p class="sub">積み上げる層のあとに、<strong>止める層</strong>を置く設計。効くのは買える理由を増やすことより、買わない理由を見落とさないこと。止める層は、準備中の AUTO とあわせて公開する。</p>
+  <p class="sub">どちらも、点数と並び順を決めるところまで。買うかどうかを決めるのは、いつも人。</p>
 </section></div>
 
 <!-- ══════════ 使い方 ══════════ -->
@@ -346,19 +342,17 @@
 <div class="wrap"><div class="rule"></div><section>
   <p class="eyebrow">料金</p>
   <h2>シグナルは、対象銘柄ぶん無料。</h2>
-  <p class="sub">課金するのはシグナルそのものではなく、それを扱う道具と、執行の自動化。<br><strong>Pro は初回2週間無料。</strong>無料期間が終わっても、自動で課金されることはない。</p>
+  <p class="sub">課金するのはシグナルそのものではなく、それを扱う道具。<br><strong>Pro は初回2週間無料。</strong>無料期間が終わっても、自動で課金されることはない。</p>
   <div class="tiers">
     <div class="tier free"><span class="tname">Free</span><p class="tprice">¥0</p>
       <ul><li>BUY / HOLD / SELL の向き</li><li>そう出た理由</li><li>発火した軸</li></ul></div>
     <div class="tier"><span class="tname">Pro</span><p class="tprice">¥980 <small>／月（税込）</small></p>
       <ul><li>スコアと内訳</li><li>エントリー／損切り／利確の目安</li><li>チャート・パターン分析</li><li>My Stock・ポートフォリオ管理</li></ul></div>
-    <div class="tier"><span class="tname">Auto</span><p class="tprice soon">COMING SOON</p>
-      <ul><li>設定した条件に従う機械的な執行</li><li>Pro の内容をすべて含む</li><li>詳細は公開時にお知らせします</li></ul></div>
   </div>
   <div class="note">
     <b>なぜシグナルを無料にしているか。</b>
     個別銘柄の売買判断を有料の壁の内側に置くと、日本では投資助言業の登録が要る。
-    そこで<strong>判断は誰でも読める場所に置き、課金は道具と自動化に限る</strong>建て付けにした。
+    そこで<strong>判断は誰でも読める場所に置き、課金は道具に限る</strong>建て付けにした。
     制約への妥協ではない ── 「一人の投資家を助ける」という目的と方向が一致している。
     助けたい相手を、壁の外に置いたままにできる。
   </div>
